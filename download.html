@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Excerpt - Unlisted | Alex Morgan</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles - Matching your clean main site */
+        :root {
+            --primary-dark: #0a192f;
+            --secondary-dark: #112240;
+            --accent: #64ffda;
+            --accent-light: #8affdf;
+            --text-light: #ccd6f6;
+            --text-muted: #8892b0;
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            --font-heading: 'Georgia', serif;
+            --font-body: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: var(--accent);
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--text-light);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--accent-light);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--accent);
+            padding: 12px 28px;
+            border: 1px solid var(--accent);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-light);
+            color: var(--primary-dark);
+        }
+
+        .accent-text {
+            color: var(--accent);
+        }
+
+        /* Header & Navigation - Same as main site */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(10, 25, 47, 0.9);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 40px;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        /* Hero Section for Excerpt */
+        .excerpt-hero {
+            padding-top: 120px;
+            text-align: center;
+            background-color: var(--secondary-dark);
+            padding-bottom: 60px;
+        }
+
+        .excerpt-hero h1 {
+            margin-bottom: 15px;
+        }
+
+        .excerpt-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* Options Section */
+        .options-section {
+            background-color: var(--primary-dark);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-card {
+            background-color: var(--secondary-dark);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border-top: 3px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .option-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .option-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* PDF Preview Section */
+        .preview-section {
+            background-color: var(--secondary-dark);
+        }
+
+        .preview-container {
+            background-color: var(--primary-dark);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .pdf-placeholder {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, rgba(100, 255, 218, 0.05) 100%);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .pdf-placeholder i {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        /* Reading Mode Section */
+        .reading-section {
+            background-color: var(--primary-dark);
+            padding: 60px 0;
+        }
+
+        .reader-container {
+            background-color: var(--secondary-dark);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .reader-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(136, 146, 176, 0.2);
+        }
+
+        .page-indicator {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .reader-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .page-nav-btn {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .page-nav-btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        .reader-content {
+            padding: 30px;
+            background-color: var(--primary-dark);
+            border-radius: var(--border-radius);
+            min-height: 400px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+            position: relative;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .chapter-title {
+            color: var(--accent);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-dark);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                flex-direction: column;
+                background-color: var(--primary-dark);
+                width: 100%;
+                text-align: center;
+                padding: 20px 0;
+                transition: var(--transition);
+                box-shadow: var(--shadow);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            h1 {
+                font-size: 2.3rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .reader-container {
+                padding: 20px;
+            }
+            
+            .reader-content {
+                padding: 20px;
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .option-card {
+                padding: 25px;
+            }
+        }
+
+        /* Reading Mode Specific */
+        .reader-mode .reader-content {
+            font-size: 1.2rem;
+            line-height: 2;
+            padding: 40px;
+            max-height: none;
+        }
+
+        .reader-mode .reader-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Highlight for current page */
+        .current-page {
+            background-color: rgba(100, 255, 218, 0.05);
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">Niam Nangalia</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#books">Books</a></li>
+                    <li><a href="https://niamco.github.io/download.html">Download</a></li>
+                    <li><a href="https://niamco.github.io/writing-blog.html">Blog</a></li>
+                    <li><a href="https://niamco.github.io/newsletter.html">Newsletter</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="excerpt-hero" id="excerpt">
+        <div class="container">
+            <h1>Unlisted - Excerpt</h1>
+            <p class="excerpt-subtitle">Read the first four chapters of the dystopian novel</p>
+            <p>This excerpt includes Chapters 1-4 of "Unlisted". The full manuscript is complete and seeking representation.</p>
+        </div>
+    </section>
+
+    <!-- Options Section -->
+    <section class="options-section">
+        <div class="container">
+            <h2>Choose How to Read</h2>
+            <div class="options-grid">
+                <div class="option-card">
+                    <div class="option-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>PDF Preview</h3>
+                    <p>View the formatted PDF version of the excerpt. Perfect for those who want to see the manuscript as it would appear in print.</p>
+                    <div class="option-buttons">
+                        <button id="viewPdfBtn" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View PDF
+                        </button>
+                        <a href="Unlisted.pdf" download class="btn">
+                            <i class="fas fa-download"></i> Download PDF
+                        </a>
+                    </div>
+                </div>
+                <div class="option-card">
+                    <div class="option-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h3>Online Reading</h3>
+                    <p>Read directly in your browser with comfortable scrolling or page-flipping navigation. Optimized for all devices.</p>
+                    <div class="option-buttons">
+                        <button id="scrollReadBtn" class="btn">
+                            <i class="fas fa-scroll"></i> Scroll Read
+                        </button>
+                        <button id="pageFlipBtn" class="btn btn-primary">
+                            <i class="fas fa-book"></i> Page Flip Mode
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PDF Preview Section (Hidden by default) -->
+    <section id="pdfSection" class="preview-section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>PDF Preview</h2>
+                <p>Preview of the first four chapters. Use the download button to save a copy.</p>
+            </div>
+            <div class="preview-container">
+                <div class="pdf-placeholder">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>PDF Preview</h3>
+                    <p>The PDF preview would appear here. For now, you can download the file.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="Unlisted.pdf" download class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download Excerpt (PDF)
+                        </a>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button id="backToOptionsFromPdf" class="btn">
+                        <i class="fas fa-arrow-left"></i> Back to Options
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reading Mode Section (Hidden by default) -->
+    <section id="readingSection" class="reading-section" style="display: none;">
+        <div class="container">
+            <div class="reader-container" id="readerContainer">
+                <div class="reader-controls">
+                    <div class="reader-mode-toggle">
+                        <button id="toggleReaderMode" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">
+                            <i class="fas fa-columns"></i> Reader Mode
+                        </button>
+                    </div>
+                    <div class="page-indicator">
+                        Chapter <span id="currentChapter">1</span>
+                    </div>
+                    <div class="reader-nav">
+                        <button id="prevPage" class="page-nav-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button id="nextPage" class="page-nav-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="reader-content" id="readerContent">
+                    <!-- Content will be loaded here by JavaScript -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button id="backToOptionsFromRead" class="btn">
+                        <i class="fas fa-arrow-left"></i> Back to Options
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">Niam Nangalia</div>
+                <p>Exploring systems, control, and resistance through speculative fiction.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-goodreads"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+                <p class="copyright">&copy; 2026 Niam Nangalia. All rights reserved. "Unlisted" excerpt provided for preview purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Excerpt content
+        const chapters = [
+            {
+                title: "CHAPTER ONE",
+                content: `Alex Mercer had never thought much about the system. Not really. It was there, like the lights buzzing in the school hallway or the intercom clicking at exactly 8:03 a.m. every morning. It existed, it hummed, and everyone obeyed it. That was enough—until it wasn't.
+
+The first sign came when the morning bell rang and the intercom didn't. Nothing. Silence. The kind that presses against your ears until it hurts.
+
+"Alex Mercer, report to the administration hall," a voice said, cold and clipped.
+
+Every eye in the classroom snapped toward Alex. The teacher didn't even look up from the stack of papers. Just a nod.
+
+Alex stood. Heart ticking faster than normal, shoes squeaking against the linoleum. Walking through the hall felt wrong. Too quiet. Too precise. Like the building itself was watching.
+
+The doors to the administration hall weren't doors Alex had seen before. Or maybe they had, and nobody noticed because no one ever went in there. The man waiting inside didn't smile. His ID badge gleamed under the fluorescent lights, but the eyes behind it were sharp, calculating.
+
+"You've been selected," he said. "Selected for something the system doesn't tell most people about."
+
+Alex frowned. "Selected for what?"
+
+He didn't answer immediately. Just watched. Breathing slow, deliberate.
+
+"You're... unlisted," he said finally.
+
+Alex blinked. Unlisted. Not a word they'd learned yet. Not a status on any digital tag. Not a tier, a clearance, or a permission level. It wasn't supposed to exist.
+
+"You don't exist officially anymore," the man continued. "Not because you've done anything wrong. Because the system... decided you shouldn't be tracked. Not everyone gets this."
+
+Alex's stomach twisted. That made no sense. Nobody just vanished from the system. People didn't disappear.
+
+And yet here they were, being told they had.`
+            },
+            {
+                title: "CHAPTER TWO",
+                content: `Alex walked down the hall, eyes scanning every corner. It was the same hallway they had walked a thousand times before, but now it felt like a trap. Every door, every camera, every teacher could see someone who did not exist. That was heavy. That was terrifying.
+
+Back in the classroom, the others whispered about math tests and lunch menus. Alex listened but didn't respond. The world had changed. The rules had changed. And nobody else knew.
+
+At lunch, Alex slipped out of the cafeteria, careful to avoid the staff who scanned badges like hawks. In the quiet of the storage corridor, Alex pulled out a small notebook. Notes, observations, patterns. Every Pre-Citizen had them. Most ignored them. Alex had to record everything.
+
+A soft voice startled them.
+
+"You're moving differently now," it said. Alex looked up. Mara, a quiet girl from the third row, leaned against the wall. "I know what they told you. I've seen it before."
+
+"What do you mean?" Alex asked.
+
+Mara smiled faintly. "Unlisted. Not in the system anymore. They think it's an accident. It isn't. It never is."
+
+Alex's stomach sank. "So you're... unlisted too?"
+
+Mara shook her head. "I know about it. I'm still listed. For now. But I can show you how the system bends around you when no one notices."
+
+Alex nodded. They wanted guidance. They wanted control. But more than anything, they wanted to survive.
+
+By the end of the day, Alex had mapped part of the hallways, the camera rotations, and the permission zones. They had discovered doors that should be locked but weren't. They had learned that being Unlisted meant more than erasure. It meant freedom if you were careful. It meant danger if you weren't.
+
+Alex scribbled in the notebook: If they don't see you, they can't stop you. But if they notice, you disappear for real.
+
+Tomorrow, they would test the rules. Tomorrow, the game would start.`
+            },
+            {
+                title: "CHAPTER THREE",
+                content: `The next morning, Alex woke before the alarms. They didn't have a tag that would buzz if they moved too early. Being Unlisted had perks. Quiet perks. Dangerous perks.
+
+Walking through the hall, Alex noticed the small differences. The cameras moved slower. Some doors clicked open without a scan. It was subtle, but it was there. The system was blind to them. For now.
+
+Mara appeared by the supply closet. "Ready to test it?" she asked. Her voice was calm, but her eyes were sharp.
+
+"I think so," Alex said.
+
+Mara led them to the east wing, a section mostly reserved for upper Pre-Citizens. "No one goes here before lunch. No one. But you? You can walk right through."
+
+Alex swallowed. Every step felt like a gamble. If a teacher or a guard noticed, there was no backup. No one could save them.
+
+They reached the first door. Alex held their breath, pressed the handle, and it opened.
+
+Inside, rows of lockers gleamed under the fluorescent lights. A single desk sat in the center. Papers were stacked neatly, as if waiting for someone who would never come.
+
+Alex moved cautiously, scanning for cameras. None moved toward them. They could feel the system pausing, recalculating, not sure what to do with someone it didn't know existed.
+
+Mara whispered, "Every rule has a gap. Find it. Use it."
+
+Alex nodded. They had to learn fast. Every moment of freedom carried risk. But freedom, even small, felt like breathing air after being underwater too long.
+
+They spent the next hour mapping the room, the exits, the camera patterns, and a secret stairwell that led to a maintenance corridor. Alex scribbled in the notebook: The system is smart, but it isn't perfect. I can move. I can survive.
+
+By the time lunch arrived, Alex knew something important: being Unlisted wasn't just about disappearing. It was about being invisible, being clever, and knowing the gaps no one else sees.
+
+Tomorrow would be harder. Tomorrow, Alex would push limits that might break them.`
+            },
+            {
+                title: "CHAPTER FOUR",
+                content: `Alex crouched behind a stack of supply crates, the faint hum of fluorescent lights above blending with the soft vibration of the building's sensors. Every step they had taken so far had been careful, measured, deliberate. Even a shadow out of place could trigger the system.
+
+Mara whispered, "You see that?" She pointed to a thin red line skimming the floor—a motion sensor that shouldn't have been active yet.
+
+Alex's stomach tightened. "How do we get past it?"
+
+Mara smiled faintly. "Watch. Wait. Then move."
+
+They slipped forward, timing their steps with the pulsing of the sensor, each footfall silent against the polished floor. A patrol drone rounded the corner, its eye sweeping methodically. Alex pressed against the wall, breath caught, counting seconds in their head until it passed.
+
+They reached the door leading to the restricted wing. It was reinforced metal, the kind that required multiple scans for a Pre-Citizen. Alex's hand hovered over the handle. Normally, it would have stopped them immediately. But the system paused. It didn't know they existed.
+
+Inside, rows of digital lockers glowed with encrypted files. The air smelled faintly of disinfectant and circuitry. Alex moved from row to row, scanning labels for the one Mara had told them about. Every file could be a trap. Every locker could trigger an alarm.
+
+Then it happened. A soft click echoed behind them. Alex froze. The lights flickered. A panel in the corner beeped—a warning indicator. Someone was checking the logs.
+
+Mara hissed, "Time to improvise."
+
+Alex darted to the nearest maintenance vent, forcing it open just wide enough to slip through. The metal grate scraped, sending a sharp echo into the hallway. The lights flickered again, then steadied. The system had noticed, but it couldn't track someone who didn't exist. Not immediately.
+
+Crawling through the vent, Alex kept one hand on the notebook, memorizing every detail: sensor positions, patrol paths, emergency overrides. Survival depended on knowing the system better than it knew them.
+
+Finally, they dropped into a side corridor far from the restricted area, heart pounding, lungs burning. Mara was there, watching silently.
+
+"You did well," she said. "Most people get caught on their first try. You understand now. Being Unlisted isn't safety. It's opportunity—and danger."
+
+Alex nodded. Danger was nothing new. But now, for the first time, they felt the weight of freedom—and the sharp edge of being invisible in a world that didn't want them to exist.`
+            }
+        ];
+        
+        // State management
+        let currentChapterIndex = 0;
+        let isReaderMode = false;
+        
+        // DOM Elements
+        const pdfSection = document.getElementById('pdfSection');
+        const readingSection = document.getElementById('readingSection');
+        const optionsSection = document.querySelector('.options-section');
+        const readerContent = document.getElementById('readerContent');
+        const currentChapterSpan = document.getElementById('currentChapter');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const toggleReaderModeBtn = document.getElementById('toggleReaderMode');
+        const readerContainer = document.getElementById('readerContainer');
+        
+        // View PDF button
+        document.getElementById('viewPdfBtn').addEventListener('click', () => {
+            optionsSection.style.display = 'none';
+            pdfSection.style.display = 'block';
+            readingSection.style.display = 'none';
+            window.scrollTo({ top: pdfSection.offsetTop - 80, behavior: 'smooth' });
+        });
+        
+        // Scroll Read button
+        document.getElementById('scrollReadBtn').addEventListener('click', () => {
+            isReaderMode = false;
+            loadAllChapters();
+            optionsSection.style.display = 'none';
+            pdfSection.style.display = 'none';
+            readingSection.style.display = 'block';
+            readerContainer.classList.remove('reader-mode');
+            toggleReaderModeBtn.innerHTML = '<i class="fas fa-columns"></i> Reader Mode';
+            window.scrollTo({ top: readingSection.offsetTop - 80, behavior: 'smooth' });
+        });
+        
+        // Page Flip button
+        document.getElementById('pageFlipBtn').addEventListener('click', () => {
+            isReaderMode = true;
+            loadChapter(currentChapterIndex);
+            optionsSection.style.display = 'none';
+            pdfSection.style.display = 'none';
+            readingSection.style.display = 'block';
+            readerContainer.classList.add('reader-mode');
+            toggleReaderModeBtn.innerHTML = '<i class="fas fa-scroll"></i> Scroll Mode';
+            window.scrollTo({ top: readingSection.offsetTop - 80, behavior: 'smooth' });
+        });
+        
+        // Back buttons
+        document.getElementById('backToOptionsFromPdf').addEventListener('click', showOptions);
+        document.getElementById('backToOptionsFromRead').addEventListener('click', showOptions);
+        
+        // Navigation buttons
+        prevPageBtn.addEventListener('click', () => {
+            if (currentChapterIndex > 0) {
+                currentChapterIndex--;
+                loadChapter(currentChapterIndex);
+            }
+        });
+        
+        nextPageBtn.addEventListener('click', () => {
+            if (currentChapterIndex < chapters.length - 1) {
+                currentChapterIndex++;
+                loadChapter(currentChapterIndex);
+            }
+        });
+        
+        // Toggle reader mode
+        toggleReaderModeBtn.addEventListener('click', () => {
+            isReaderMode = !isReaderMode;
+            
+            if (isReaderMode) {
+                readerContainer.classList.add('reader-mode');
+                toggleReaderModeBtn.innerHTML = '<i class="fas fa-scroll"></i> Scroll Mode';
+                loadChapter(currentChapterIndex);
+            } else {
+                readerContainer.classList.remove('reader-mode');
+                toggleReaderModeBtn.innerHTML = '<i class="fas fa-columns"></i> Reader Mode';
+                loadAllChapters();
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (readingSection.style.display === 'block') {
+                if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                    prevPageBtn.click();
+                } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                    nextPageBtn.click();
+                } else if (e.key === 'r' || e.key === 'R') {
+                    toggleReaderModeBtn.click();
+                }
+            }
+        });
+        
+        // Functions
+        function showOptions() {
+            optionsSection.style.display = 'block';
+            pdfSection.style.display = 'none';
+            readingSection.style.display = 'none';
+            window.scrollTo({ top: optionsSection.offsetTop - 80, behavior: 'smooth' });
+        }
+        
+        function loadChapter(index) {
+            const chapter = chapters[index];
+            readerContent.innerHTML = `
+                <h3 class="chapter-title">${chapter.title}</h3>
+                <div style="white-space: pre-line;">${chapter.content}</div>
+            `;
+            currentChapterSpan.textContent = index + 1;
+            
+            // Update button states
+            prevPageBtn.disabled = index === 0;
+            nextPageBtn.disabled = index === chapters.length - 1;
+            
+            // Scroll to top of content
+            readerContent.scrollTop = 0;
+        }
+        
+        function loadAllChapters() {
+            let allContent = '';
+            chapters.forEach((chapter, index) => {
+                allContent += `
+                    <div id="chapter-${index}" class="${index === currentChapterIndex ? 'current-page' : ''}">
+                        <h3 class="chapter-title">${chapter.title}</h3>
+                        <div style="white-space: pre-line; margin-bottom: 40px;">${chapter.content}</div>
+                    </div>
+                `;
+            });
+            
+            readerContent.innerHTML = allContent;
+            currentChapterSpan.textContent = '1-' + chapters.length;
+            
+            // Update button states for scroll mode
+            prevPageBtn.disabled = true;
+            nextPageBtn.disabled = true;
+        }
+        
+        // Initialize with first chapter in scroll mode
+        loadAllChapters();
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
