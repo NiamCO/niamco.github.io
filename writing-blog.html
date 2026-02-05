@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Blog | Niam Nangalia</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+    <style>
+        /* Base Styles - Matching your main site */
+        :root {
+            --primary-dark: #0a192f;
+            --secondary-dark: #112240;
+            --accent: #64ffda;
+            --accent-light: #8affdf;
+            --text-light: #ccd6f6;
+            --text-muted: #8892b0;
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
+            --shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            --font-heading: 'Georgia', serif;
+            --font-body: 'Helvetica Neue', Arial, sans-serif;
+            --admin-gold: #FFD700;
+            --admin-gold-light: #FFF8DC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: var(--accent);
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--text-light);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--accent-light);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--accent);
+            padding: 12px 28px;
+            border: 1px solid var(--accent);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-light);
+            color: var(--primary-dark);
+        }
+
+        .accent-text {
+            color: var(--accent);
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(10, 25, 47, 0.9);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        /* Username Entry Page */
+        .username-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 100px;
+            text-align: center;
+        }
+
+        .username-card {
+            background-color: var(--secondary-dark);
+            border-radius: var(--border-radius);
+            padding: 60px 50px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .username-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background-color: var(--primary-dark);
+            border: 1px solid rgba(136, 146, 176, 0.3);
+            border-radius: var(--border-radius);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.1);
+        }
+
+        .username-note {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* Blog Main Page (hidden initially) */
+        .blog-main {
+            padding-top: 120px;
+            display: none;
+        }
+
+        /* Create Post Section */
+        .create-post-section {
+            background-color: var(--secondary-dark);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(136, 146, 176, 0.2);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .user-avatar.admin {
+            background: linear-gradient(135deg, var(--admin-gold) 0%, #ffed4e 100%);
+        }
+
+        .user-details h3 {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .user-details p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background-color: var(--admin-gold);
+            color: var(--primary-dark);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+            font-family: var(--font-body);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .char-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .char-count.warning {
+            color: #ff6b6b;
+        }
+
+        /* Posts Feed */
+        .posts-feed {
+            margin-top: 40px;
+        }
+
+        .post-card {
+            background-color: var(--secondary-dark);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-left: 3px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .post-card.admin-post {
+            border-left: 3px solid var(--admin-gold);
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, rgba(255, 215, 0, 0.05) 100%);
+            position: relative;
+        }
+
+        .post-card.admin-post:before {
+            content: 'ADMIN';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--admin-gold);
+            color: var(--primary-dark);
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+
+        .post-avatar.admin {
+            background: linear-gradient(135deg, var(--admin-gold) 0%, #ffed4e 100%);
+        }
+
+        .post-meta h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .post-time {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 3px;
+        }
+
+        .post-content {
+            margin-bottom: 25px;
+            line-height: 1.7;
+            color: var(--text-light);
+            white-space: pre-wrap;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(136, 146, 176, 0.2);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .stat-item:hover {
+            color: var(--accent);
+        }
+
+        .stat-item.active {
+            color: var(--accent);
+        }
+
+        .stat-item.liked {
+            color: #ff6b6b;
+        }
+
+        .like-count, .comment-count {
+            font-weight: 600;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 20px;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 12px 15px;
+            background-color: var(--primary-dark);
+            border: 1px solid rgba(136, 146, 176, 0.3);
+            border-radius: var(--border-radius);
+            color: var(--text-light);
+            font-family: var(--font-body);
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .comments-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .comment-item {
+            background-color: var(--primary-dark);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 2px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        .comment-avatar.admin {
+            background: linear-gradient(135deg, var(--admin-gold) 0%, #ffed4e 100%);
+        }
+
+        .comment-meta h5 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .comment-time {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .comment-content {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(136, 146, 176, 0.3);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: rgba(136, 146, 176, 0.3);
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-dark);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                flex-direction: column;
+                background-color: var(--primary-dark);
+                width: 100%;
+                text-align: center;
+                padding: 20px 0;
+                transition: var(--transition);
+                box-shadow: var(--shadow);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            h1 {
+                font-size: 2.3rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .username-card {
+                padding: 40px 25px;
+            }
+            
+            .create-post-section {
+                padding: 25px;
+            }
+            
+            .post-card {
+                padding: 20px;
+            }
+            
+            .comment-form {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .nav-links li {
+                margin-left: 15px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Username Entry Page -->
+    <section id="usernamePage" class="username-page">
+        <div class="container">
+            <div class="username-card">
+                <div class="username-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <h1>Welcome to the Writing Blog</h1>
+                <p>Enter a username to join the discussion. This username cannot be changed later.</p>
+                
+                <div class="form-group">
+                    <label for="usernameInput">Choose Your Username</label>
+                    <input type="text" id="usernameInput" class="form-control" placeholder="Enter your username..." maxlength="30">
+                </div>
+                
+                <div class="form-group">
+                    <label for="usernameConfirm">Confirm Username</label>
+                    <input type="text" id="usernameConfirm" class="form-control" placeholder="Re-enter your username...">
+                </div>
+                
+                <button id="setUsernameBtn" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Enter Blog
+                </button>
+                
+                <p class="username-note">
+                    Note: Your username will be displayed with all your posts and comments. 
+                    YOU CANNOT CHANGE YOUR USERNAME UPON CLICKING ENTER BLOG
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Header & Navigation -->
+    <header id="mainHeader" style="display: none;">
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">Niam Nangalia</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#books">Books</a></li>
+                    <li><a href="download.html">Download</a></li>
+                    <li><a href="writing-blog.html" class="accent-text">Blog</a></li>
+                    <li><a href="newsletter.html">Newsletter</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Blog Main Content -->
+    <main id="blogMain" class="blog-main" style="display: none;">
+        <div class="container">
+            <!-- Create Post Section -->
+            <section class="create-post-section">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-details">
+                        <h3 id="displayUsername">Username</h3>
+                        <p id="userStatus">Ready to write</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <textarea id="postContent" class="form-control" placeholder="Share your thoughts on dystopian fiction, writing techniques, or discuss 'Unlisted'..." maxlength="2000"></textarea>
+                    <div class="char-count" id="charCount">0/2000 characters</div>
+                </div>
+                
+                <div class="post-actions">
+                    <div></div> <!-- Spacer -->
+                    <button id="createPostBtn" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Post
+                    </button>
+                </div>
+            </section>
+
+            <!-- Posts Feed -->
+            <section class="posts-feed">
+                <h2>Community Discussions</h2>
+                <div id="postsContainer">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Loading posts...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">Niam Nangalia</div>
+                <p>Exploring systems, control, and resistance through speculative fiction.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-goodreads"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+                <p class="copyright">&copy; 2026 Niam Nangalia. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://rnxsmimwcezxwkbuovvp.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJueHNtaW13Y2V6eHdrYnVvdnZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMzk3MjgsImV4cCI6MjA4NTgxNTcyOH0.ntX3R4XEpOqXPHU3pH0bUTO-EFbcPykzG1jifkOiVl0';
+        
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Global state
+        let currentUsername = '';
+        let isAdmin = false;
+        let posts = [];
+        let likes = [];
+        let comments = [];
+        
+        // DOM Elements
+        const usernamePage = document.getElementById('usernamePage');
+        const mainHeader = document.getElementById('mainHeader');
+        const blogMain = document.getElementById('blogMain');
+        const usernameInput = document.getElementById('usernameInput');
+        const usernameConfirm = document.getElementById('usernameConfirm');
+        const setUsernameBtn = document.getElementById('setUsernameBtn');
+        const postContent = document.getElementById('postContent');
+        const createPostBtn = document.getElementById('createPostBtn');
+        const charCount = document.getElementById('charCount');
+        const postsContainer = document.getElementById('postsContainer');
+        const displayUsername = document.getElementById('displayUsername');
+        const userAvatar = document.getElementById('userAvatar');
+        const userStatus = document.getElementById('userStatus');
+        
+        // Check if username is already set
+        function checkExistingUsername() {
+            const savedUsername = localStorage.getItem('blogUsername');
+            if (savedUsername) {
+                currentUsername = savedUsername;
+                isAdmin = currentUsername === 'Doneman123';
+                initializeBlog();
+            }
+        }
+        
+        // Initialize blog after username is set
+        function initializeBlog() {
+            usernamePage.style.display = 'none';
+            mainHeader.style.display = 'block';
+            blogMain.style.display = 'block';
+            
+            // Update user display
+            updateUserDisplay();
+            
+            // Load initial data
+            loadPosts();
+            setupRealtime();
+        }
+        
+        // Update user display info
+        function updateUserDisplay() {
+            if (isAdmin) {
+                displayUsername.innerHTML = 'Niam Nangalia <span class="admin-badge">ADMIN</span>';
+                userAvatar.textContent = 'N';
+                userAvatar.classList.add('admin');
+                userStatus.textContent = 'Administrator';
+            } else {
+                displayUsername.textContent = currentUsername;
+                userAvatar.textContent = currentUsername.charAt(0).toUpperCase();
+                userStatus.textContent = 'Community Member';
+            }
+        }
+        
+        // Set username
+        async function setUsername() {
+            const username = usernameInput.value.trim();
+            const confirm = usernameConfirm.value.trim();
+            
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            if (username !== confirm) {
+                alert('Usernames do not match');
+                return;
+            }
+            
+            if (username.length < 3) {
+                alert('Username must be at least 3 characters');
+                return;
+            }
+            
+            if (username.length > 30) {
+                alert('Username must be less than 30 characters');
+                return;
+            }
+            
+            // Check if username exists in database
+            const { data: existingUser } = await supabase
+                .from('users')
+                .select('*')
+                .eq('username', username)
+                .single();
+            
+            if (existingUser && username !== 'Doneman123') {
+                alert('Username already taken. Please choose another.');
+                return;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('blogUsername', username);
+            
+            // Insert into database if not exists
+            if (!existingUser) {
+                const { error } = await supabase
+                    .from('users')
+                    .insert([{ 
+                        username: username,
+                        is_admin: username === 'Doneman123'
+                    }]);
+                
+                if (error) {
+                    console.error('Error creating user:', error);
+                }
+            }
+            
+            // Set global state
+            currentUsername = username;
+            isAdmin = username === 'Doneman123';
+            
+            // Initialize blog
+            initializeBlog();
+        }
+        
+        // Load posts from database
+        async function loadPosts() {
+            postsContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading posts...</p></div>';
+            
+            try {
+                // Load posts
+                const { data: postsData, error: postsError } = await supabase
+                    .from('posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (postsError) throw postsError;
+                
+                // Load likes
+                const { data: likesData, error: likesError } = await supabase
+                    .from('likes')
+                    .select('*');
+                
+                if (likesError) throw likesError;
+                
+                // Load comments
+                const { data: commentsData, error: commentsError } = await supabase
+                    .from('comments')
+                    .select('*');
+                
+                if (commentsError) throw commentsError;
+                
+                // Update global state
+                posts = postsData || [];
+                likes = likesData || [];
+                comments = commentsData || [];
+                
+                // Render posts
+                renderPosts();
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                postsContainer.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div><p>Error loading posts. Please refresh.</p></div>';
+            }
+        }
+        
+        // Render posts to DOM
+        function renderPosts() {
+            if (posts.length === 0) {
+                postsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>No posts yet</h3>
+                        <p>Be the first to start a discussion!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            postsContainer.innerHTML = '';
+            
+            posts.forEach(post => {
+                const postLikes = likes.filter(like => like.post_id === post.id);
+                const postComments = comments.filter(comment => comment.post_id === post.id);
+                const hasLiked = postLikes.some(like => like.username === currentUsername);
+                const isPostAdmin = post.username === 'Doneman123';
+                const displayName = isPostAdmin ? 'Niam Nangalia | Admin' : post.username;
+                
+                const postElement = document.createElement('div');
+                postElement.className = `post-card ${isPostAdmin ? 'admin-post' : ''}`;
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-user">
+                            <div class="post-avatar ${isPostAdmin ? 'admin' : ''}">${displayName.charAt(0)}</div>
+                            <div class="post-meta">
+                                <h4>${displayName} ${isPostAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}</h4>
+                                <div class="post-time">${formatTime(post.created_at)}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    
+                    <div class="post-stats">
+                        <div class="stat-item like-btn ${hasLiked ? 'liked' : ''}" data-post-id="${post.id}">
+                            <i class="fas fa-heart"></i>
+                            <span class="like-count">${postLikes.length}</span>
+                            <span>Like</span>
+                        </div>
+                        <div class="stat-item comment-toggle" data-post-id="${post.id}">
+                            <i class="fas fa-comment"></i>
+                            <span class="comment-count">${postComments.length}</span>
+                            <span>Comment</span>
+                        </div>
+                    </div>
+                    
+                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Write a comment..." maxlength="500">
+                            <button class="btn comment-submit-btn" data-post-id="${post.id}">Post</button>
+                        </div>
+                        <div class="comments-list" id="comments-list-${post.id}">
+                            ${renderComments(post.id)}
+                        </div>
+                    </div>
+                `;
+                
+                postsContainer.appendChild(postElement);
+            });
+            
+            // Add event listeners
+            addPostEventListeners();
+        }
+        
+        // Render comments for a post
+        function renderComments(postId) {
+            const postComments = comments.filter(comment => comment.post_id === postId);
+            
+            if (postComments.length === 0) {
+                return '<p style="color: var(--text-muted); font-style: italic; text-align: center;">No comments yet</p>';
+            }
+            
+            return postComments.map(comment => {
+                const isCommentAdmin = comment.username === 'Doneman123';
+                const displayName = isCommentAdmin ? 'Niam Nangalia | Admin' : comment.username;
+                
+                return `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div class="comment-user">
+                                <div class="comment-avatar ${isCommentAdmin ? 'admin' : ''}">${displayName.charAt(0)}</div>
+                                <div class="comment-meta">
+                                    <h5>${displayName}</h5>
+                                    <div class="comment-time">${formatTime(comment.created_at)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-content">${escapeHtml(comment.content)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Add event listeners to posts
+        function addPostEventListeners() {
+            // Like buttons
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const postId = btn.dataset.postId;
+                    await toggleLike(postId);
+                });
+            });
+            
+            // Comment toggle buttons
+            document.querySelectorAll('.comment-toggle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const postId = btn.dataset.postId;
+                    const commentsSection = document.getElementById(`comments-${postId}`);
+                    commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+            
+            // Comment submit buttons
+            document.querySelectorAll('.comment-submit-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const postId = btn.dataset.postId;
+                    const input = document.getElementById(`comment-input-${postId}`);
+                    const content = input.value.trim();
+                    
+                    if (content) {
+                        await createComment(postId, content);
+                        input.value = '';
+                    }
+                });
+            });
+            
+            // Enter key for comments
+            document.querySelectorAll('.comment-input').forEach(input => {
+                input.addEventListener('keypress', async (e) => {
+                    if (e.key === 'Enter') {
+                        const postId = input.id.replace('comment-input-', '');
+                        const content = input.value.trim();
+                        
+                        if (content) {
+                            await createComment(postId, content);
+                            input.value = '';
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Toggle like on a post
+        async function toggleLike(postId) {
+            try {
+                // Check if already liked
+                const existingLike = likes.find(like => 
+                    like.post_id === postId && like.username === currentUsername
+                );
+                
+                if (existingLike) {
+                    // Unlike
+                    const { error } = await supabase
+                        .from('likes')
+                        .delete()
+                        .eq('id', existingLike.id);
+                    
+                    if (!error) {
+                        likes = likes.filter(like => like.id !== existingLike.id);
+                    }
+                } else {
+                    // Like
+                    const { data, error } = await supabase
+                        .from('likes')
+                        .insert([{
+                            post_id: postId,
+                            username: currentUsername
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (!error && data) {
+                        likes.push(data);
+                    }
+                }
+                
+                // Update display
+                const likeBtn = document.querySelector(`.like-btn[data-post-id="${postId}"]`);
+                const likeCount = likeBtn.querySelector('.like-count');
+                const postLikes = likes.filter(like => like.post_id === postId);
+                
+                likeCount.textContent = postLikes.length;
+                likeBtn.classList.toggle('liked');
+                
+            } catch (error) {
+                console.error('Error toggling like:', error);
+            }
+        }
+        
+        // Create a new comment
+        async function createComment(postId, content) {
+            try {
+                const { data, error } = await supabase
+                    .from('comments')
+                    .insert([{
+                        post_id: postId,
+                        username: currentUsername,
+                        content: content
+                    }])
+                    .select()
+                    .single();
+                
+                if (!error && data) {
+                    comments.push(data);
+                    
+                    // Update comment count
+                    const commentBtn = document.querySelector(`.comment-toggle[data-post-id="${postId}"]`);
+                    const commentCount = commentBtn.querySelector('.comment-count');
+                    const postComments = comments.filter(comment => comment.post_id === postId);
+                    commentCount.textContent = postComments.length;
+                    
+                    // Update comments list
+                    const commentsList = document.getElementById(`comments-list-${postId}`);
+                    commentsList.innerHTML = renderComments(postId);
+                    
+                    // Re-add event listeners
+                    addPostEventListeners();
+                }
+            } catch (error) {
+                console.error('Error creating comment:', error);
+                alert('Error posting comment. Please try again.');
+            }
+        }
+        
+        // Create a new post
+        async function createPost() {
+            const content = postContent.value.trim();
+            
+            if (!content) {
+                alert('Please enter some content');
+                return;
+            }
+            
+            if (content.length > 2000) {
+                alert('Post is too long (max 2000 characters)');
+                return;
+            }
+            
+            createPostBtn.disabled = true;
+            createPostBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+            
+            try {
+                const { data, error } = await supabase
+                    .from('posts')
+                    .insert([{
+                        username: currentUsername,
+                        content: content
+                    }])
+                    .select()
+                    .single();
+                
+                if (!error && data) {
+                    posts.unshift(data);
+                    renderPosts();
+                    postContent.value = '';
+                    charCount.textContent = '0/2000 characters';
+                    charCount.classList.remove('warning');
+                    
+                    // Scroll to top to see new post
+                    window.scrollTo({ top: blogMain.offsetTop - 100, behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error('Error creating post:', error);
+                alert('Error creating post. Please try again.');
+            } finally {
+                createPostBtn.disabled = false;
+                createPostBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post';
+            }
+        }
+        
+        // Setup real-time updates
+        function setupRealtime() {
+            // Posts channel
+            const postsChannel = supabase
+                .channel('posts-channel')
+                .on('postgres_changes', 
+                    { event: 'INSERT', schema: 'public', table: 'posts' },
+                    (payload) => {
+                        // Don't add if already in array
+                        if (!posts.find(p => p.id === payload.new.id)) {
+                            posts.unshift(payload.new);
+                            renderPosts();
+                        }
+                    }
+                )
+                .subscribe();
+            
+            // Comments channel
+            const commentsChannel = supabase
+                .channel('comments-channel')
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'comments' },
+                    (payload) => {
+                        // Don't add if already in array
+                        if (!comments.find(c => c.id === payload.new.id)) {
+                            comments.push(payload.new);
+                            
+                            // Update specific post's comments
+                            const postId = payload.new.post_id;
+                            const commentsList = document.getElementById(`comments-list-${postId}`);
+                            if (commentsList) {
+                                commentsList.innerHTML = renderComments(postId);
+                            }
+                            
+                            // Update comment count
+                            const commentBtn = document.querySelector(`.comment-toggle[data-post-id="${postId}"]`);
+                            if (commentBtn) {
+                                const commentCount = commentBtn.querySelector('.comment-count');
+                                const postComments = comments.filter(comment => comment.post_id === postId);
+                                commentCount.textContent = postComments.length;
+                            }
+                        }
+                    }
+                )
+                .subscribe();
+            
+            // Likes channel
+            const likesChannel = supabase
+                .channel('likes-channel')
+                .on('postgres_changes',
+                    { event: '*', schema: 'public', table: 'likes' },
+                    (payload) => {
+                        if (payload.eventType === 'INSERT') {
+                            likes.push(payload.new);
+                        } else if (payload.eventType === 'DELETE') {
+                            likes = likes.filter(like => like.id !== payload.old.id);
+                        }
+                        
+                        // Update like counts
+                        posts.forEach(post => {
+                            const likeBtn = document.querySelector(`.like-btn[data-post-id="${post.id}"]`);
+                            if (likeBtn) {
+                                const likeCount = likeBtn.querySelector('.like-count');
+                                const postLikes = likes.filter(like => like.post_id === post.id);
+                                likeCount.textContent = postLikes.length;
+                                
+                                // Update like status
+                                const hasLiked = postLikes.some(like => like.username === currentUsername);
+                                if (hasLiked) {
+                                    likeBtn.classList.add('liked');
+                                } else {
+                                    likeBtn.classList.remove('liked');
+                                }
+                            }
+                        });
+                    }
+                )
+                .subscribe();
+        }
+        
+        // Utility functions
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: diffDays > 365 ? 'numeric' : undefined
+            });
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Event Listeners
+        setUsernameBtn.addEventListener('click', setUsername);
+        
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') setUsername();
+        });
+        
+        usernameConfirm.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') setUsername();
+        });
+        
+        postContent.addEventListener('input', () => {
+            const length = postContent.value.length;
+            charCount.textContent = `${length}/2000 characters`;
+            
+            if (length > 1800) {
+                charCount.classList.add('warning');
+            } else {
+                charCount.classList.remove('warning');
+            }
+        });
+        
+        createPostBtn.addEventListener('click', createPost);
+        
+        postContent.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                createPost();
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                });
+            });
+        }
+        
+        // Initialize
+        checkExistingUsername();
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
